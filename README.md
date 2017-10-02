@@ -17,7 +17,7 @@ the setup a virtual environement and activate it
 
 ```
     $ virtualenv python-env
-    $ source python-env/Script/activate
+    $ source python-env/Scripts/activate
 ```
 
 this allow us to install and deploy our project in a more portable way
@@ -26,7 +26,7 @@ other python project in an other version.
 
 for installing dependency run :
 ```
-    pip install -r python-requirements.txt
+    pip install -r python-requirement.txt
 ```
 
 
