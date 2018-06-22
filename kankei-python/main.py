@@ -9,9 +9,6 @@ import data_import
 from csv_handling import dict_in_csv, csv_reset
 from data import nodes_group
 
-#todo add unit test and other things
-#todo remove this yellow thing
-#todo commit ! :D:D :D its getting somewhere
 
 def main(path, skip_csv):
     print('reading_config...')
