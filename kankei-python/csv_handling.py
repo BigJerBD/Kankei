@@ -8,9 +8,9 @@ from pathlib import Path
 def csv_reset(csv_path, node_path, link_path, **_):
     if os.path.exists(csv_path):
         shutil.rmtree(csv_path)
-        Path(csv_path).mkdir()
-        Path(csv_path,node_path).mkdir()
-        Path(csv_path,link_path).mkdir()
+    Path(csv_path).mkdir()
+    Path(csv_path,node_path).mkdir()
+    Path(csv_path,link_path).mkdir()
 
 
 def dict_in_csv(data_dct, csv_path, **_):
