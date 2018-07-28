@@ -1,0 +1,24 @@
+
+dbms_config:
+    basepath: '<TO_FILL>'
+    database: '<TO_FILL>'
+    version: '<TO_FILL>'
+    neo4j_admin: 'bin\neo4j-admin.bat'
+    data_path: 'data\databases\graph.db'
+
+target_db :
+    uri: '<TO_FILL>'
+    user: '<TO_FILL>'
+    password: '<TO_FILL>'
+
+
+node_path: "etc/data/result/node"
+link_path: "etc/data/result/link"
+
+component_file : "etc/data/xml/kanji-strokes.xml"
+kanji_file : "etc/xml/kanji.xml"
+radical_file : "etc/xml/radicals.xml"
+word_file : "etc/xml/kanji-words.xml"
+
+
+

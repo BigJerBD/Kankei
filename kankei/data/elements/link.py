@@ -4,7 +4,7 @@ from data.elements.abstract_element import AbstractElement
 class LinkMeta(type):
 
     def __repr__(self):
-        return f"<class {self.__name__}::Node>"
+        return "<class {}::Node>".format(self.__name__)
 
     def __init__(cls, name, bases, dct):
         super(LinkMeta, cls).__init__(name, bases, dct)

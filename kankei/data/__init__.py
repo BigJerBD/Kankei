@@ -27,9 +27,17 @@ def _get_node_group(classes):
     return groups
 
 
-all_links = _get_classes(Link, 'data.links')
-all_nodes = _get_classes(SimplifiedNode, 'data.nodes')
-all_types = _get_classes(AbstractType, 'data.elements.proprety_types')
+def all_links():
+    return _get_classes(Link, 'data.links')
 
-nodes_group = _get_node_group(all_nodes)
 
+def all_nodes():
+    return _get_classes(SimplifiedNode, 'data.nodes')
+
+
+def all_types():
+    return _get_classes(AbstractType, 'data.elements.proprety_types')
+
+
+def node_group():
+    return _get_node_group(all_nodes())

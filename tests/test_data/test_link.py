@@ -1,6 +1,6 @@
 import unittest
 
-from data.elements.link import Link
+from data.elements.link import SimplifiedLink
 from data.elements.node import SimplifiedNode
 from data.elements.proprety_types import String
 
@@ -12,7 +12,7 @@ class TestLink(unittest.TestCase):
             'name': String()
         }
 
-    class LinkData(Link):
+    class LinkData(SimplifiedLink):
         fields = {
             'element1': String(),
             'element2': String()
@@ -29,7 +29,7 @@ class TestLink(unittest.TestCase):
     result_csv = {
         'element1:string': 'value1',
         'element2:string': 'new_value2',
-        ':TYPE': 'Link',
+        ':TYPE': 'LinkData',
         ':START_ID(NodeData-ID)': 'begin',
         ':END_ID(NodeData-ID)': 'end'
     }

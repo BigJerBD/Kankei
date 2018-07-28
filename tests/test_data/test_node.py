@@ -28,7 +28,7 @@ class TestNode(unittest.TestCase):
 
     def test_node_csv(self):
         res_csv = {':LABEL': 'NodeData',
-                   'ID(NodeData-ID)': 'writing1',
+                   ':ID(NodeData-ID)': 'writing1',
                    'stroke_count:int[]': '7;8'}
         self.assertEqual(res_csv, self.node.csv)
 
@@ -38,14 +38,14 @@ class TestNode(unittest.TestCase):
 
     def test_childnode_csv(self):
         res_csv = {':LABEL': 'ChildNodeData;NodeData',
-                   'ID(ChildNodeData-ID)': 'writing2',
+                   ':ID(ChildNodeData-ID)': 'writing2',
                    'writing:string': 'writing1',
                    'stroke_count:int[]': '8;9'}
         self.assertEqual(res_csv, self.childnode.csv)
 
     def test_childnode2_csv(self):
         res_csv = {':LABEL': 'ChildNodeData2;NodeData',
-                   'ID(NodeData-ID)': 'writing1',
+                   ':ID(NodeData-ID)': 'writing1',
                    'writing3:string': 'writing3',
                    'stroke_count:int[]': '8;9'}
         self.assertEqual(res_csv, self.childnode2.csv)

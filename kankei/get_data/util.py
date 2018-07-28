@@ -23,7 +23,7 @@ def load_and_parse(method):
 def import_data(dct, data):
     data_cls = type(data)
     if data:
-        if data_cls == list or data_cls == tuple :
+        if data_cls == list or data_cls == tuple:
             data = [d for d in data if d]
             data_cls = type(data[0])
             dct[data_cls] += data

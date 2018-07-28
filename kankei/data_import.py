@@ -8,6 +8,14 @@ from get_data.get_radical import get_radicals
 from get_data.get_word import get_word, Link
 from get_data.util import import_data
 
+def get_csv_data(config):
+    data = get_data(**config)
+    data = merge_dct_from_grp(data, node_group)
+    data = remove_duplicate(data)
+    data = split_data(data, **config)
+    data = make_csv(data)
+    return data
+
 
 def get_data(component_file, kanji_file, radical_file, word_file, **_):
     all_data = defaultdict(list)
@@ -16,6 +24,8 @@ def get_data(component_file, kanji_file, radical_file, word_file, **_):
         for elems in method(file).values():
             import_data(all_data, elems)
 
+
+    # this part need to be parameterable
     update(get_components, component_file)
     update(get_kanji, kanji_file)
     update(get_radicals, radical_file)
@@ -45,7 +55,7 @@ def remove_duplicate(data):
     return data
 
 
-def split_data(data,node_path,link_path,**_):
+def split_data(data, node_path, link_path, **_):
     result = {}
     for key_cls in data:
         name = key_cls.__name__
@@ -69,7 +79,8 @@ def split_data(data,node_path,link_path,**_):
     return result
 
 
-
-
 def make_csv(data):
     return {key: [val.csv for val in lst] for key, lst in data.items()}
+
+
+

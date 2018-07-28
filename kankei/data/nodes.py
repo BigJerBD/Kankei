@@ -50,7 +50,6 @@ class Reading(SimplifiedNode):
         'reading'
     ]
 
-
     def _post_init(self, reading):
         reading = reading.replace('-', '').replace('.', '')
 
@@ -125,8 +124,8 @@ class WordMisc(SimplifiedNode):
 
 
 class PartOfSpeech(SimplifiedNode):
-    indexes = ['value']
     identifier = 'value'
+    indexes = ['value']
     fields = {
         'value': String()
     }

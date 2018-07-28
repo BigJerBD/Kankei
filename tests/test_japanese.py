@@ -23,5 +23,6 @@ class TestJapanese(unittest.TestCase):
     def test_has_no_kanji(self):
         self.assertEqual(False, jp.has_kanji('かなだ'))
 
+
 if __name__ == '__main__':
     unittest.main()
