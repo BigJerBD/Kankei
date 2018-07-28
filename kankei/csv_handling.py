@@ -5,16 +5,20 @@ import shutil
 from pathlib import Path
 
 
-def csv_reset(node_path, link_path, **_):
-    for pth in [node_path, link_path]:
-        if os.path.exists(pth):
-            shutil.rmtree(pth)
-            Path(pth).mkdir()
+def csv_reset(csv_path, node_path, link_path, **_):
+    if os.path.exists(csv_path):
+        shutil.rmtree(csv_path)
+
+    # this section behaviour must be verified, (sensible merge conflict related to config)
+    Path(csv_path).mkdir()
+    Path(csv_path,node_path).mkdir()
+    Path(csv_path,link_path).mkdir()
 
 
-def dict_in_csv(data_dct, **_):
+def dict_in_csv(data_dct, csv_path, **_):
+    csv_path = Path(csv_path)
     for name, data in data_dct.items():
-        path = Path(name).with_suffix('.csv')
+        path = (csv_path / name).with_suffix('.csv')
         _write_in_csv(path, _get_csv_header(data), data)
 
 
