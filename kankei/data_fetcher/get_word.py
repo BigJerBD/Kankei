@@ -1,42 +1,43 @@
 from data.links import *
 from data.nodes import *
-from get_data.util import load_and_parse, import_data
+from data_fetcher.fetch_helper import xml_parse
 from language.japanese import has_kanji
 
-@load_and_parse
-def get_word(xml, data):
+
+@xml_parse
+def get_word(xml, fetch_helper):
     """create a node_collection and link_collection containing word data
     """
     for xml in xml.iter('entry'):
         baseread_xmls = get_baseread_xmls(xml)
         words = make_words(xml)
-        import_data(data, words)
+        fetch_helper.add_list(words)
 
         for word in words:
             # link all reading to words
             if baseread_xmls:
                 nodes, links = make_readings_and_links(word, baseread_xmls)
 
-                import_data(data, nodes)
-                import_data(data, links)
+                fetch_helper.add_list(nodes)
+                fetch_helper.add_list(links)
             read_xmls = find_specific_reading_xml(word, xml)
             if read_xmls:
                 nodes, links = make_readings_and_links(word, read_xmls)
-                import_data(data, nodes)
-                import_data(data, links)
+                fetch_helper.add_list(nodes)
+                fetch_helper.add_list(links)
 
         for sense in xml.iter('sense'):
             # link all definition to word
             definition = make_definition(xml)
-            import_data(data, definition)
+            fetch_helper.add(definition)
 
             for word in words:
-                import_data(data, make_word_def_link(word, definition))
+                fetch_helper.add(make_word_def_link(word, definition))
 
             for name, nodes, links in get_def_and_childs(definition, sense):
                 # link all category to definitions
-                import_data(data, nodes)
-                import_data(data, links)
+                fetch_helper.add_list(nodes)
+                fetch_helper.add_list(links)
 
 
 def find_specific_reading_xml(word, xml):
@@ -45,6 +46,7 @@ def find_specific_reading_xml(word, xml):
         for w in xml.findall('r_ele')
         if any(word.props['writing'] == re_restr.text for re_restr in w.findall('re_restr'))
     ]
+
 
 def get_baseread_xmls(xml):
     return [r for r in xml.findall('r_ele') if not r.findall('re_restr')]
@@ -64,14 +66,11 @@ def get_def_and_childs(definition, xml):
 
 
 def make_words(xml):
-    """
-
-    """
     entry_sequence = xml.find('ent_seq').text
     if xml.findall('k_ele'):
         return [Word(entry_sequence=entry_sequence,
                      writing=word.find('keb').text,
-                     has_kanji= has_kanji(word.find('keb').text),
+                     has_kanji=has_kanji(word.find('keb').text),
                      information=[inf.text for inf in word.findall('ke_inf')],
                      priority=[pri.text for pri in word.findall('ke_pri')],
                      ) for word in xml.findall('k_ele')]
@@ -83,7 +82,7 @@ def make_words(xml):
 
 
 def make_readings_and_links(word, xmls):
-    readings  = (_make_reading(xml) for xml in xmls)
+    readings = (_make_reading(xml) for xml in xmls)
     return zip(*[(read, _make_reading_link(word, read)) for read in readings])
 
 

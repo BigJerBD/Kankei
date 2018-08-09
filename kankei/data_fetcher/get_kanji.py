@@ -1,12 +1,10 @@
-import functools
-
 from data.links import KanjiIsPronounced, HasMeaning
 from data.nodes import Kanji, Meaning, Reading
-from get_data.util import load_and_parse, import_data
+from data_fetcher.fetch_helper import xml_parse
 
 
-@load_and_parse
-def get_kanji(xml, data):
+@xml_parse
+def get_kanji(xml, data_helper):
     """
     create a node_collection and link_collection containing kanji data
     """
@@ -15,12 +13,11 @@ def get_kanji(xml, data):
         readings = _make_readings_tuple(char_xml)
         meanings = _make_meanings(char_xml)
 
-        import_elem = functools.partial(import_data,data)
-        import_elem(kanji)
-        import_elem([read for read, prop in readings])
-        import_elem(meanings)
-        import_elem(_make_kanji_read_links(kanji, readings))
-        import_elem(_make_kanji_mean_links(kanji, meanings))
+        data_helper.add(kanji)
+        data_helper.add_list(meanings)
+        data_helper.add_list([read for read, prop in readings])
+        data_helper.add_list(_make_kanji_read_links(kanji, readings))
+        data_helper.add_list(_make_kanji_mean_links(kanji, meanings))
 
 
 def _make_kanji(xml):
@@ -46,7 +43,6 @@ def _make_readings_tuple(character_xml):
          {'type_reading': 'on' if r.attrib['r_type'] == 'ja_on' else 'kun'})
         for r in character_xml.iter('reading') if r.attrib['r_type'] in ['ja_on', 'ja_kun']
     ]
-
 
 
 def _make_kanji_read_links(kanji, readings):

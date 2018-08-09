@@ -1,4 +1,4 @@
 jaconv
 kanaconv
 pyyaml
-python_cypher
+neo4j-driver

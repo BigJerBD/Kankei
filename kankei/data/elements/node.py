@@ -8,35 +8,50 @@ class NodeMeta(type):
 
     def __init__(cls, name, bases, dct):
         super(NodeMeta, cls).__init__(name, bases, dct)
-        if name != 'SimplifiedNode':
+
+        print(dct)
+        if name != 'Node' and not dct.get('__ignore__', None):
             parent, *rest = bases
+
             setattr(cls, 'labels', [name] + getattr(cls, 'labels'))
             setattr(cls, 'type', name)
-            setattr(cls, 'label_id_pos', name if 'identifier' in dct else getattr(parent, 'label_id_pos'))
+
+            setattr(cls, 'concrete_identifier', name if 'identifier' in dct else getattr(
+                parent, 'concrete_identifier'))
             setattr(cls, 'indexes', getattr(parent, 'indexes', []) + cls.__dict__.get('indexes', []))
-            setattr(cls, 'fields', {**getattr(parent, 'fields'), **cls.__dict__.get('fields')})
+            setattr(cls, 'fields', {**getattr(parent, 'fields'), **cls.__dict__.get('fields', {})})
 
 
 class Node(AbstractElement):
-    label_id_pos = None
+    concrete_identifier = None
     identifier = None
     labels = []
     indexes = []
 
+    component_type = 'Node'
+
     def __init__(self, **properties):
         super().__init__(properties)
 
-    def __iadd__(self, other):
-        # todo add verification?
-        self.identifier = other.identifier
-        self.label_id_pos = other.label_id_pos
+    def merge(self, other):
+
+        parent = self.get_generic_parent(other)
+
+        if not self.type:
+            self.concrete_identifier = other.concrete_identifier
+            self.type = other.type
+            self.identifier = other.identifier
+        elif parent:
+            self.type = parent[-1]
+
         self.labels = list({l for l in other.labels + self.labels})
         self.indexes += list({l for l in other.indexes + self.indexes})
         self.constraints += list({l for l in other.indexes + self.indexes})
         self.fields = {**self.fields, **other.fields}
         self.props = {**self.props, **other.props}
 
-        return self
+    def get_generic_parent(self, other):
+        return list(set(self.labels).intersection(other.labels))
 
     @property
     def id(self):
@@ -47,9 +62,10 @@ class Node(AbstractElement):
         csv = self._base_csv
         id_type = self.fields[self.identifier]
         csv_header = id_type.csv_header(self.identifier)
-        csv[':ID(%s-ID)' % self.label_id_pos] = csv.pop(csv_header)
+        csv[':ID(%s-ID)' % self.concrete_identifier] = csv.pop(csv_header)
         csv[':LABEL'] = ';'.join(self.labels)
         return csv
 
 
-class SimplifiedNode(Node, metaclass=NodeMeta): ...
+class SimplifiedNode(Node, metaclass=NodeMeta):
+    __ignore__ = True

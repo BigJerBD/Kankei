@@ -39,5 +39,5 @@ def all_types():
     return _get_classes(AbstractType, 'data.elements.proprety_types')
 
 
-def node_group():
+def node_groups():
     return _get_node_group(all_nodes())

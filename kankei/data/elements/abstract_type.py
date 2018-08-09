@@ -3,7 +3,6 @@ import abc
 
 class AbstractType(abc.ABC):
 
-
     def __repr__(self):
         return f"Type::{ self.__class__.__name__}"
 
@@ -24,4 +23,3 @@ class AbstractType(abc.ABC):
 
     def csv_value(self, value):
         return str(value) if value else ""
-

@@ -2,22 +2,27 @@ import itertools
 
 from data.links import IsWrittenWith, HasStroke
 from data.nodes import Kanji, Stroke, Component
-from get_data.util import load_and_parse, import_data
+from data_fetcher.fetch_helper import xml_parse
 
 
-@load_and_parse
-def get_components(xml, data):
+@xml_parse
+def get_components(xml, fetch_helper):
     """
     create a node_collection and link_collection containing component_data
     """
+
     valid_cpn_xml = _get_cpn_xmls(xml)
     for cpn_xml in valid_cpn_xml:
+
         current_comp = _get_component(cpn_xml)
 
-        import_data(data, current_comp)
-        for elem in itertools.chain(_get_sub_components(current_comp, cpn_xml, []),
-                                    _get_strokes(current_comp, cpn_xml, [])):
-            import_data(data, elem)
+        fetch_helper.add(current_comp)
+
+        for elem in itertools.chain(
+                _get_sub_components(current_comp, cpn_xml, []),
+                _get_strokes(current_comp, cpn_xml, [])
+        ):
+            fetch_helper.add(elem)
 
 
 def _get_cpn_xmls(xml):

@@ -1,14 +1,15 @@
 from data.nodes import Radical
-from get_data.util import load_and_parse, import_data
+from data_fetcher.fetch_helper import xml_parse
 
 
-@load_and_parse
-def get_radicals(xml, data):
+@xml_parse
+def get_radicals(xml, data_helper):
     """
     create a node_collection containing radical data
     """
     for cells in (rad.findall('td') for rad in xml):
-        import_data(data, _make_radical(cells))
+        data_helper.add(_make_radical(cells))
+
 
 def _make_radical(xml):
     return Radical(
