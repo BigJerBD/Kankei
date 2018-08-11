@@ -7,7 +7,7 @@ from util import file_util
 def import_to_database():
     print('resetting graph.db')
     file_util.delete_if_exist(config.neo4j_graph)
-    print('importing csv to neo4j')
+    print('')
     csv_to_db()
 
 
@@ -20,9 +20,8 @@ def csv_to_db():
             [config.neo4j_admin, 'import',
              *[f'--nodes={(config.node_path/file).absolute()}' for file in node_files],
              *[f'--relationships={(config.link_path/file).absolute()}' for file in link_files],
-              #  "--max-memory="
+             f"--report={config.neo4j_report}"
              ],
-            shell=False
         )
 
 

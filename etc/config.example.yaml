@@ -1,8 +1,6 @@
-
-neo4j_dir:
-  basepath: '<TO_FILL>'
-  database: '<TO_FILL>'
-  version: '<TO_FILL>'
+neo4j_bin: '<TO_FILL>'
+neo4j_data: '<TO_FILL>'
+neo4j_report: '<TO_FILL>'
 
 db_dst:
   uri: '<TO_FILL>'

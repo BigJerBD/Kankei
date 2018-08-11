@@ -18,6 +18,7 @@ neo4j_bin = Path(kankei_config['neo4j_bin'])
 neo4j_data = Path(kankei_config['neo4j_data'])
 neo4j_admin = neo4j_bin / 'neo4j-admin'
 neo4j_graph = neo4j_data / 'databases' / 'graph.db'
+neo4j_report = kankei_config['neo4j_report']
 
 # neo4j http config
 db_dst = kankei_config['db_dst']
