@@ -1,6 +1,7 @@
 import config
 import data_fetcher
-from csv_file_reset import csv_file_reset
+from csv_reset import csv_file_reset
+from csv_to_kankei import import_to_database
 from util.csv_util import write_in_csv, get_csv_header
 
 
@@ -35,4 +36,4 @@ if __name__ == "__main__":
     data_to_csvs(config.node_path, kankei_dict.iter_node())
     data_to_csvs(config.link_path, kankei_dict.iter_link())
     print("transfering csv to graph_db")
-    #import_to_database()
+    import_to_database()

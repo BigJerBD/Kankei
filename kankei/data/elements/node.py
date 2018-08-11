@@ -9,7 +9,6 @@ class NodeMeta(type):
     def __init__(cls, name, bases, dct):
         super(NodeMeta, cls).__init__(name, bases, dct)
 
-        print(dct)
         if name != 'Node' and not dct.get('__ignore__', None):
             parent, *rest = bases
 
@@ -62,7 +61,7 @@ class Node(AbstractElement):
         csv = self._base_csv
         id_type = self.fields[self.identifier]
         csv_header = id_type.csv_header(self.identifier)
-        csv[':ID(%s-ID)' % self.concrete_identifier] = csv.pop(csv_header)
+        csv[':ID(%s-ID)' % self.concrete_identifier] = csv[csv_header]
         csv[':LABEL'] = ';'.join(self.labels)
         return csv
 

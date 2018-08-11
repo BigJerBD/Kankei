@@ -18,10 +18,11 @@ def csv_to_db():
     if node_files or link_files:
         subprocess.check_output(
             [config.neo4j_admin, 'import',
-             *[f'--nodes {(config.node_path/file).absolute()}' for file in node_files],
-             *[f'--relationships {(config.link_path/file).absolute()}' for file in link_files]
+             *[f'--nodes={(config.node_path/file).absolute()}' for file in node_files],
+             *[f'--relationships={(config.link_path/file).absolute()}' for file in link_files],
+              #  "--max-memory="
              ],
-            shell=True
+            shell=False
         )
 
 
