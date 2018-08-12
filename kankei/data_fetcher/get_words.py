@@ -1,6 +1,6 @@
 from data.links import *
 from data.nodes import *
-from data_fetcher.fetch_helper import xml_parse
+from data_fetcher.fetch_decorator import xml_parse
 from language.japanese import has_kanji
 
 

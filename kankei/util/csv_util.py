@@ -15,3 +15,4 @@ def write_in_csv(path, header, elems):
             writer.writeheader()
         for line in elems:
             writer.writerow(line)
+

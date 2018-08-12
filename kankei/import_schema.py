@@ -1,8 +1,9 @@
 from neo4j.v1 import GraphDatabase
 
-import config
+from config import conf
 from data import all_nodes
 
+#todo rework this part ( work but not really usable)
 
 def import_schema():
     print('writing indexes')
@@ -12,8 +13,7 @@ def import_schema():
 
 
 def import_indexes():
-    db = config.db_dst
-    neo4j = GraphDatabase.driver(db['uri'], auth=(db['user'], db['password']))
+    neo4j = GraphDatabase.driver(conf.neo4j.url, auth=conf.neo4j.auth)
 
     with neo4j.session() as session:
         write_all_index(session, all_nodes())

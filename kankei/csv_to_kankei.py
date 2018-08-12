@@ -1,26 +1,26 @@
 import subprocess
 
-import config
+from config import conf
 from util import file_util
 
 
 def import_to_database():
     print('resetting graph.db')
-    file_util.delete_if_exist(config.neo4j_graph)
-    print('')
+    file_util.delete_if_exist(conf.neo4j.graph)
+    print('importing csv to neo4j')
     csv_to_db()
 
 
 def csv_to_db():
-    node_files = list(config.node_path.iterdir())
-    link_files = list(config.link_path.iterdir())
+    node_files = list(conf.csv.node.iterdir())
+    link_files = list(conf.csv.link.iterdir())
 
     if node_files or link_files:
         subprocess.check_output(
-            [config.neo4j_admin, 'import',
-             *[f'--nodes={(config.node_path/file).absolute()}' for file in node_files],
-             *[f'--relationships={(config.link_path/file).absolute()}' for file in link_files],
-             f"--report={config.neo4j_report}"
+            [conf.neo4j.admin, 'import',
+             *[f'--nodes={(conf.csv.node/file).absolute()}' for file in node_files],
+             *[f'--relationships={(conf.csv.link/file).absolute()}' for file in link_files],
+             f"--report={conf.neo4j.report}"
              ],
         )
 

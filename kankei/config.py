@@ -1,35 +1,25 @@
-import logging
 import os
 from pathlib import Path
+
 import yaml
 
-# general config
+from util.config_util import Config
 
-kankei_home = os.environ['KANKEI_HOME']
-
-conf_path = f"{kankei_home}/etc/config.yaml"
-ex_conf_path = f"{kankei_home}/etc/config.example.yaml"
-kankei_config = yaml.load(open(conf_path))
-
+# configuration dictionary loading
+configuration_file_path = f"{os.environ['KANKEI_HOME']}/etc/config.yaml"
+base_configuration_file_path = f"{os.environ['KANKEI_HOME']}/etc/config.example.yaml"
 
 # neo4j config
 # neo4j_admin currently only work on linux, change to handle .bat if needed ....
-neo4j_bin = Path(kankei_config['neo4j_bin'])
-neo4j_data = Path(kankei_config['neo4j_data'])
-neo4j_admin = neo4j_bin / 'neo4j-admin'
-neo4j_graph = neo4j_data / 'databases' / 'graph.db'
-neo4j_report = kankei_config['neo4j_report']
+conf = Config(yaml.load(open(configuration_file_path)))
 
-# neo4j http config
-db_dst = kankei_config['db_dst']
+conf.neo4j.bin = Path(conf.neo4j.bin)
+conf.neo4j.data = Path(conf.neo4j.data)
+conf.neo4j.auth = (conf.neo4j.user, conf.neo4j.password)
 
-# src_data configs
-data_src = kankei_config['data_src']
+conf.neo4j.admin = conf.neo4j.bin / 'neo4j-admin'
+conf.neo4j.graph = conf.neo4j.data / 'databases' / 'graph.db'
 
-# csv dst config
-csv_dst = kankei_config['csv_dst']
-node_path = Path(csv_dst['node'])
-link_path = Path(csv_dst['link'])
+conf.csv.node = Path(conf.csv.node)
+conf.csv.link = Path(conf.csv.link)
 
-
-#loggings

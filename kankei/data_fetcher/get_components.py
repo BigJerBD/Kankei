@@ -2,7 +2,7 @@ import itertools
 
 from data.links import IsWrittenWith, HasStroke
 from data.nodes import Kanji, Stroke, Component
-from data_fetcher.fetch_helper import xml_parse
+from data_fetcher.fetch_decorator import xml_parse
 
 
 @xml_parse

@@ -1,21 +1,20 @@
-neo4j_bin: '<TO_FILL>'
-neo4j_data: '<TO_FILL>'
-neo4j_report: '<TO_FILL>'
+neo4j.bin: '<TO_FILL>'
+neo4j.data: '<TO_FILL>'
+neo4j.report: '<TO_FILL>'
+neo4j.url: '<TO_FILL>'
+neo4j.user: '<TO_FILL>'
+neo4j.password: '<TO_FILL>'
 
-db_dst:
-  uri: '<TO_FILL>'
-  user: '<TO_FILL>'
-  password: '<TO_FILL>'
+csv.node: '<TO_FILL>'
+csv.link: '<TO_FILL>'
 
-csv_dst:
-  node: '<TO_FILL>'
-  link: '<TO_FILL>'
+data.component : '<TO_FILL>'
+data.kanji : '<TO_FILL>'
+data.radical : '<TO_FILL>'
+data.word : '<TO_FILL>'
 
-data_src:
-  component : '<TO_FILL>'
-  kanji : '<TO_FILL>'
-  radical : '<TO_FILL>'
-  word : '<TO_FILL>'
-
+data.apitore.key: '<TO_FILL>'
+data.apitore.hyponym: '<TO_FILL>'
+data.apitore.hypernym: '<TO_FILL>'
 
 

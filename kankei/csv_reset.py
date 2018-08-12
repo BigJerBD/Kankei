@@ -1,11 +1,11 @@
-import config
+from config import conf
 from util import file_util
 
 
 def csv_file_reset():
     file_util.reset_dir(
-        config.node_path,
-        config.link_path
+        conf.csv.node,
+        conf.csv.node
     )
 
 
