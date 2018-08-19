@@ -1,6 +1,8 @@
+import contextlib
 import csv
 import itertools
 import os
+from pathlib import Path
 
 
 def get_csv_header(data_lst):
@@ -15,4 +17,19 @@ def write_in_csv(path, header, elems):
             writer.writeheader()
         for line in elems:
             writer.writerow(line)
+
+
+@contextlib.contextmanager
+def open_csvs(base_path, names, mode, encoding):
+    yield {
+        name: csv.writer(open(Path(base_path, name).with_suffix('.csv'), mode, encoding=encoding))
+        for name in names
+    }
+
+
+def stream_csv_data(csv_path, encoding, delimiter=","):
+    with open(csv_path, "r", encoding=encoding) as fs:
+        reader = csv.reader(fs, delimiter=delimiter)
+        for collumn in reader:
+            yield from (cell for cell in collumn if cell)
 

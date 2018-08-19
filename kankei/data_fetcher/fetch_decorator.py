@@ -10,10 +10,10 @@ def xml_parse(method):
     :return:
     """
 
-    def wrap(fetch_helper, xml_path):
+    def wrap(smart_dict, xml_path):
         data_root = Et.parse(xml_path).getroot()
-        method(data_root, fetch_helper)
-        return fetch_helper
+        method(data_root, smart_dict)
+        return smart_dict
 
     return wrap
 
@@ -25,9 +25,9 @@ def web_api_fetch(method):
     :return:
     """
 
-    def wrap(fetch_helper, url, **defaults):
+    def wrap(smart_dict, url, **defaults):
         def request_get(params):
             return requests.get(url=url, params={**params, **defaults})
-        return method(request_get, fetch_helper)
+        return method(smart_dict, request_get)
 
     return wrap

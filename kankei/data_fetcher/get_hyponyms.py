@@ -10,7 +10,10 @@ from data_fetcher import web_api_fetch
 
 
 @web_api_fetch
-def get_hyponym(request_get,fetch_helper):
+def get_hyponyms(fetch_helper,request_get):
+    ...
 
-    request_get()
 
+@web_api_fetch
+def get_hypernyms(fetch_helper,request_get):
+    ...

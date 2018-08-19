@@ -3,3 +3,4 @@ kanaconv
 pyyaml
 neo4j-driver
 request
+request-html

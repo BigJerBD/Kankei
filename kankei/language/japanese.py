@@ -3,9 +3,9 @@ import re
 from jaconv import jaconv
 from kanaconv import KanaConv
 
-_HIRAGANA_REGEX= re.compile(r'[\u3040-\u309F]')
-_KATAKANA_REGEX = re.compile(r'[\u30A0-\u30FF]')
-_KANJI_REGEX = re.compile(r'[\u4E00-\u9FAF]')
+hiragana_regex= re.compile(r'[\u3040-\u309F]')
+katakana_regex = re.compile(r'[\u30A0-\u30FF]')
+kanji_regex = re.compile(r'[\u4E00-\u9FAF]')
 
 
 def has_hiragana(string):
@@ -13,7 +13,7 @@ def has_hiragana(string):
     :param string:
     :return: boolean saying if word has hiragana
     """
-    return bool(_HIRAGANA_REGEX.search(string))
+    return bool(hiragana_regex.search(string))
 
 
 def has_katakana(string):
@@ -21,7 +21,7 @@ def has_katakana(string):
     :param string:
     :return: boolean saying if word has katakana
     """
-    return bool(_KATAKANA_REGEX.search(string))
+    return bool(katakana_regex.search(string))
 
 
 def has_kanji(string):
@@ -29,7 +29,7 @@ def has_kanji(string):
     :param string:
     :return: boolean represna
     """
-    return bool(_KANJI_REGEX.search(string))
+    return bool(kanji_regex.search(string))
 
 
 def to_romaji(kana):

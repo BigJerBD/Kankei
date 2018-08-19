@@ -8,19 +8,20 @@ from util.csv_util import write_in_csv, get_csv_header
 def data_to_csv():
     kankei_dict = data_fetcher.kankeismartdict.KankeiSmartDict()
 
-    execute_data_fetches(
-        (data_fetcher.get_components, kankei_dict, conf.data.component),
-        (data_fetcher.get_kanji, kankei_dict, conf.data.kanji),
-        (data_fetcher.get_radicals, kankei_dict, conf.data.radical),
-        (data_fetcher.get_word, kankei_dict, conf.data.word)
-    )
+    execute_fetches(kankei_dict)
+
     write_to_csv(conf.csv.node, kankei_dict.iter_node())
     write_to_csv(conf.csv.link, kankei_dict.iter_link())
 
 
-def execute_data_fetches(*fetch_procedures):
-    for fetch_proc, *args in fetch_procedures:
-        fetch_proc(*args)
+def execute_fetches(kankei_dict):
+    data = conf.data
+    data_fetcher.get_components(kankei_dict, data.component)
+    data_fetcher.get_kanji(kankei_dict, data.kanji)
+    data_fetcher.get_radicals(kankei_dict, data.radical)
+    #data_fetcher.get_word(kankei_dict, data.word)
+    #data_fetcher.get_hyponyms(kankei_dict, data.apitore.hyponym, access_token=data.apitore.key)
+    #data_fetcher.get_hypernyms(kankei_dict, data.apitore.hypernym, access_token=data.apitore.key)
 
 
 def write_to_csv(base_path, data_sequence):
