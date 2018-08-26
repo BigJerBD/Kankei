@@ -2,7 +2,7 @@ import os
 from shutil import copyfile
 from subprocess import PIPE, Popen
 
-import kankei_paths
+import config
 
 
 def installing_requirements():
@@ -16,8 +16,8 @@ def installing_requirements():
 
 
 def generating_config():
-    if not os.path.exists(kankei_paths.CONF_PATH):
-        copyfile(kankei_paths.EX_CONF_PATH, kankei_paths.CONF_PATH)
+    if not os.path.exists(config.configuration_file_path):
+        copyfile(config.base_configuration_file_path, config.configuration_file_path)
         print('file copied')
     else:
         print('cant setup config file:: already exist')
