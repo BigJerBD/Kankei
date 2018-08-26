@@ -1,6 +1,6 @@
 import re
 
-from web_scraper.kanji_dict_scraper import KanjiDictScraper
+from web_scrapers.kanji_dict_scraper import KanjiDictScraper
 
 exception_list = [
     ('<img:/common/images/kanji/16/skj_8362.png>', '蝍'),
@@ -14,13 +14,14 @@ exception_list = [
     ('<img:/common/images/kanji/16/skj_8380.png>', '艼'),
 ]
 
+#todo to fix
 
 class KanjipediaScraper(KanjiDictScraper):
 
     def __init__(self):
         super().__init__(
             url="http://www.kanjipedia.jp",
-            mode="w",
+            mode="w+",
             encoding="UTF-8",
             result_files=["meanings", "refs", "png_path"],
         )

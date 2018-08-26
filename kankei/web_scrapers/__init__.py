@@ -1,9 +1,9 @@
 import inspect
 import sys
 
-from web_scraper.kanji_dict_scraper import KanjiDictScraper
-from web_scraper.kanjijiten_scrap import KanjitenonScraper
-from web_scraper.kanjipedia_scrap import KanjipediaScraper
+from web_scrapers.kanji_dict_scraper import KanjiDictScraper
+from web_scrapers.kanjijiten_scrap import KanjitenonScraper
+from web_scrapers.kanjipedia_scrap import KanjipediaScraper
 
 
 # todo investigate a lighter way to do class providing
@@ -19,6 +19,6 @@ def _get_classes(cls, from_module):
 def get_scrapers():
     return {
         name: cls
-        for module in sys.modules if "web_scraper" in module
+        for module in sys.modules if "web_scrapers" in module
         for name, cls in _get_classes(KanjiDictScraper, module)
     }

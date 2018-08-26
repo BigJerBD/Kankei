@@ -59,34 +59,45 @@ class KanjiDictScraper:
         if not Path(result_path).exists():
             Path(result_path).mkdir()
 
-        webscrap_step = webscrap_flow(len(kanjis_to_search), result_path)
-        progress_bar = next(webscrap_step)
-
         # to rework
+        progress_handler = webscrap_flow(len(kanjis_to_search), result_path)
         if self.stream_write:
-            with open_csvs(result_path, self.data_categories, self.mode, self.encoding) as files_dict:
-                for kanji in kanjis_to_search:
-                    for group, datas in self.fetch_kanji_data(kanji):
-                        files_dict[group].writerow(datas)
-                    progress_bar.next()
-
-            next(webscrap_step)
-            next(webscrap_step)
-
+            self.process_kanji_stream(result_path, kanjis_to_search, progress_handler)
         else:
-            data_dict = defaultdict(list)
-            for cat in self.data_categories:
-                data_dict.setdefault(cat, [])
+            self.process_kanji_batch(result_path, kanjis_to_search, progress_handler)
+
+    def process_kanji_stream(self, result_path, kanjis_to_search, progress_handler):
+        progress_bar = next(progress_handler)
+
+        csv_files = open_csvs(result_path, self.data_categories, self.mode, self.encoding)
+        with csv_files as files_dict:
 
             for kanji in kanjis_to_search:
                 for group, datas in self.fetch_kanji_data(kanji):
-                    data_dict[group].append(datas)
+                    files_dict[group].csv.writerow(datas)
+                    files_dict[group].file.flush()
+
                 progress_bar.next()
 
-            next(webscrap_step)
-            self.post_processing(data_dict)
-            serialize_dct_in_csvs(result_path, data_dict)
-            next(webscrap_step)
+        next(progress_handler)
+        next(progress_handler)
+
+    def process_kanji_batch(self, result_path, kanjis_to_search, progress_handler):
+        data_dict = defaultdict(list)
+        progress_bar = next(progress_handler)
+
+        for cat in self.data_categories:
+            data_dict.setdefault(cat, [])
+
+        for kanji in kanjis_to_search:
+            for group, datas in self.fetch_kanji_data(kanji):
+                data_dict[group].append([kanji] + datas)
+            progress_bar.next()
+
+        next(progress_handler)
+        self.post_processing(data_dict)
+        serialize_dct_in_csvs(result_path, data_dict)
+        next(progress_handler)
 
     def fetch_kanji_data(self, kanji):
         try:
@@ -102,10 +113,15 @@ class KanjiDictScraper:
 
     def handle_search_page(self, url, kanji):
         session = HTMLSession()
+        headers = {
+            "user-agent": "Mozilla/5.0 (X11; Linux x86_64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/44.0.2403.157 Safari/537.36"
+        }
         page = self.get_search_page(url, session, kanji)
         link = self.get_kanji_page_link(page)
         if link:
-            return session.get(url + link).html
+            return session.get(url + link, headers=headers).html
         return link
 
     @abc.abstractmethod
