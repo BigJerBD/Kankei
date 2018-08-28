@@ -78,7 +78,7 @@ def handle_kanji_meaning(page, kanji):
                 else:
                     sub_info = f"img:{attr['src']}"
             else:
-                sub_info =f"misc:{attr['alt']}"
+                sub_info = f"misc:{attr['alt']}"
 
             result += f'<{sub_info}>'
         result += text
@@ -134,7 +134,7 @@ def replace_png_tags(line, replace_dct):
         for search, replace in exception_list:
             if search in line:
                 line = line.replace(search, replace)
-        else :
+        else:
             print(f"Exception replacement not found for line :\n\t- {line}")
 
     return line

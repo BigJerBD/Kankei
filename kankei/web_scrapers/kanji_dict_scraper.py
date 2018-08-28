@@ -92,6 +92,7 @@ class KanjiDictScraper:
         for kanji in kanjis_to_search:
             for group, datas in self.fetch_kanji_data(kanji):
                 data_dict[group].append(datas)
+
             progress_bar.next()
 
         next(progress_handler)
