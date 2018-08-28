@@ -1,6 +1,6 @@
 import re
 
-from web_scraper.kanji_dict_scraper import KanjiDictScraper
+from web_scrapers.kanji_dict_scraper import KanjiDictScraper
 
 exception_list = [
     ('<img:/common/images/kanji/16/skj_8362.png>', '蝍'),
@@ -20,7 +20,7 @@ class KanjipediaScraper(KanjiDictScraper):
     def __init__(self):
         super().__init__(
             url="http://www.kanjipedia.jp",
-            mode="w",
+            mode="w+",
             encoding="UTF-8",
             result_files=["meanings", "refs", "png_path"],
         )
@@ -69,7 +69,17 @@ def handle_kanji_meaning(page, kanji):
         text = misc.tail or ""
         attr = misc.attrib
         if misc.tag == "img":
-            sub_info = f"img:{attr['src']}" if "alt" not in attr else f"misc:{attr['alt']}"
+
+            if "alt" not in attr:
+                if "kan1.png" in attr['src']:
+                    sub_info = "misc:二"
+                elif "kan2.png" in attr['src']:
+                    sub_info = "misc:二"
+                else:
+                    sub_info = f"img:{attr['src']}"
+            else:
+                sub_info =f"misc:{attr['alt']}"
+
             result += f'<{sub_info}>'
         result += text
 
@@ -114,11 +124,17 @@ def get_png(page):
 
 def replace_png_tags(line, replace_dct):
     try:
-        for match in re.finditer(r"<img:([^>]+)>", line):
-            begin, end = match.span()
+        match = re.search(r"<img:([^>]+)>", line)
+        while match:
+            begin, end = match.start(), match.end()
             line = line[:begin] + replace_dct[match.group(1)] + line[end:]
+            match = re.search(r"<img:([^>]+)>", line)
+
     except KeyError:
         for search, replace in exception_list:
-            line = line.replace(search, replace)
+            if search in line:
+                line = line.replace(search, replace)
+        else :
+            print(f"Exception replacement not found for line :\n\t- {line}")
 
     return line

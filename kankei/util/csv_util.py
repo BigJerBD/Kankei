@@ -2,7 +2,10 @@ import contextlib
 import csv
 import itertools
 import os
+from collections import namedtuple
 from pathlib import Path
+
+OpenCsv = namedtuple("OpenCsv", ["csv", "file"])
 
 
 def get_csv_header(data_lst):
@@ -21,10 +24,11 @@ def dict_to_csv(path, header, elems):
 
 @contextlib.contextmanager
 def open_csvs(base_path, names, mode, encoding):
-    yield {
-        name: csv.writer(open(Path(base_path, name).with_suffix('.csv'), mode, encoding=encoding))
+    file_dict = {
+        name: open(Path(base_path, name).with_suffix('.csv'), mode, encoding=encoding)
         for name in names
     }
+    yield {name: OpenCsv(csv=csv.writer(file),file=file) for name, file in file_dict.items()}
 
 
 def stream_csv_data(csv_path, encoding, delimiter=","):
@@ -32,4 +36,3 @@ def stream_csv_data(csv_path, encoding, delimiter=","):
         reader = csv.reader(fs, delimiter=delimiter)
         for collumn in reader:
             yield from (cell for cell in collumn if cell)
-

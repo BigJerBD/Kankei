@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from web_scraper.kanji_dict_scraper import KanjiDictScraper
+from web_scrapers.kanji_dict_scraper import KanjiDictScraper
 
 
 class KanjitenonScraper(KanjiDictScraper):
@@ -9,7 +9,7 @@ class KanjitenonScraper(KanjiDictScraper):
     def __init__(self):
         super().__init__(
             url="https://kanji.jitenon.jp",
-            mode="w",
+            mode="w+",
             encoding="UTF-8",
             result_files=["JIS水準", "Unicode", "学年",
                           "意味", "漢字検定", "画数", "異体字",
@@ -20,7 +20,7 @@ class KanjitenonScraper(KanjiDictScraper):
     def get_search_page(self, url, session, kanji):
         return session.get(
             url=url + '/cat/search.php',
-            params={"getdata": kanji, "search": "fpart", "search2": "twin"}
+            params={"getdata": kanji, "search": "fpart", "search2": "kanji"}
         )
 
     def get_kanji_page_link(self, page):
@@ -43,6 +43,8 @@ class KanjitenonScraper(KanjiDictScraper):
         mapped_table = split_horizontal_table(info_page)
 
         for key, values in mapped_table.items():
+            if not key:
+                raise KeyError("Invalid parsing of kanjijitenon table")
             yield from [(key, (kanji, value)) for value in values if value]
 
     def post_processing(self, data_dict):
@@ -54,13 +56,14 @@ def split_horizontal_table(table):
     cur_list = []
     cur_header = None
     for line in table:
-        if line.find('th'):
+        header = line.xpath("//th/h3/text()|//th/text()", first=True)
+        if header and header != "\xa0":
             if cur_list:
                 rows_dict[cur_header] = cur_list
             cur_list = []
-            cur_header = line.xpath("//th/h3/text()", first=True)
+            cur_header = header
 
-        cur_list.append(line.xpath("//td/descendant-or-self::text()", first=True))
+        cur_list.append("".join(line.xpath("//td/descendant-or-self::text()")))
 
     if cur_header == "異体字":
         rows_dict[cur_header] = [variant for variant in cur_list

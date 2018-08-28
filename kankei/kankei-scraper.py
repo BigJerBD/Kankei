@@ -1,6 +1,6 @@
 import argparse
 
-import web_scraper
+import web_scrapers
 from util.csv_util import stream_csv_data
 
 parser = argparse.ArgumentParser(description='Web Scrapper for Kanji dictionary websites')
@@ -12,13 +12,13 @@ parser.add_argument("-de", default="UTF-8", help="encoding of the destination fi
 parser.add_argument("-a", action="store_true",
                     help="append data to csvs, else overwrite files")
 
-parser.add_argument("scraper", choices=list(web_scraper.get_scrapers().keys()),
+parser.add_argument("scraper", choices=list(web_scrapers.get_scrapers().keys()),
                     help="Name of the scraper to use")
 parser.add_argument("src", help="source csv file")
 parser.add_argument("dst", help="destination csv follder ")
 
 if __name__ == "__main__":
-    scrapers = web_scraper.get_scrapers()
+    scrapers = web_scrapers.get_scrapers()
     args = parser.parse_args()
 
     kanjis = list(stream_csv_data(args.src, args.se, delimiter=args.sd))
