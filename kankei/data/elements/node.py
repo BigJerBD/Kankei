@@ -12,14 +12,18 @@ class NodeMeta(type):
         if name != 'Node' and not dct.get('__ignore__', None):
             parent, *rest = bases
 
-            setattr(cls, 'labels', [name] + getattr(cls, 'labels'))
-            setattr(cls, 'type', name)
+            result_labels = dct.get('labels', []) + getattr(parent, 'labels')
+            if dct.get('__ignore_clsname__', None):
+                setattr(cls, 'type', dct.get('type', None) or getattr(parent, 'type', []))
+            else:
+                result_labels = [name] + result_labels
+                setattr(cls, 'type', name)
 
+            setattr(cls, 'labels', result_labels)
             setattr(cls, 'concrete_identifier', name if 'identifier' in dct else getattr(
                 parent, 'concrete_identifier'))
             setattr(cls, 'indexes', getattr(parent, 'indexes', []) + cls.__dict__.get('indexes', []))
             setattr(cls, 'fields', {**getattr(parent, 'fields'), **cls.__dict__.get('fields', {})})
-
 
 class Node(AbstractElement):
     concrete_identifier = None
@@ -29,7 +33,8 @@ class Node(AbstractElement):
 
     component_type = 'Node'
 
-    def __init__(self, **properties):
+    def __init__(self, tags=None, **properties):
+        self.labels += tags or []
         super().__init__(properties)
 
     def merge(self, other):

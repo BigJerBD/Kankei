@@ -1,26 +1,32 @@
 from data.links import KanjiIsPronounced, HasMeaning
-from data.nodes import Kanji, Meaning, Reading
+from data.nodes import Kanji, Meaning, JapaneseReading, KoreanReading, ChineseReading
 from data_fetcher.fetch_decorator import xml_parse
+
+lang_tag_dict = {
+    "fr": "French",
+    "es": "Spanish",
+    "pt": "Portugese",
+    None: "English"
+}
 
 
 @xml_parse
-def get_kanji(xml, data_helper):
+def get_kanji(xml):
     """
     create a node_collection and link_collection containing kanji data
     """
     for char_xml in xml.iter('character'):
-        kanji = _make_kanji(char_xml)
-        readings = _make_readings_tuple(char_xml)
-        meanings = _make_meanings(char_xml)
+        kanji = make_kanji(char_xml)
+        readings = list(make_readingstuple(char_xml))
+        meanings = list(make_meanings(char_xml))
+        yield kanji
+        yield from meanings
+        yield from [read for read, _ in readings]
+        yield from make_readlinks(kanji, readings)
+        yield from make_meanlinks(kanji, meanings)
 
-        data_helper.add(kanji)
-        data_helper.add_list(meanings)
-        data_helper.add_list([read for read, prop in readings])
-        data_helper.add_list(_make_kanji_read_links(kanji, readings))
-        data_helper.add_list(_make_kanji_mean_links(kanji, meanings))
 
-
-def _make_kanji(xml):
+def make_kanji(xml):
     misc = xml.find('misc')
     radical_number = [rad.text for rad in xml.iter('rad_value') if rad.attrib['rad_type'] == 'classical'][0]
     return Kanji(writing=xml.find('literal').text,
@@ -32,24 +38,27 @@ def _make_kanji(xml):
                  )
 
 
-def _make_meanings(character_xml):
-    return [Meaning(value=m.text)
-            for m in character_xml.iter('meaning') if 'm_lang' not in m.attrib]
+def make_meanings(character_xml):
+    yield from [Meaning(value=m.text, tags=[lang_tag_dict[m.attrib.get('m_lang', None)] or []])
+                for m in character_xml.iter('meaning')]
 
 
-def _make_readings_tuple(character_xml):
-    return [
-        (Reading(reading=r.text),
-         {'type_reading': 'on' if r.attrib['r_type'] == 'ja_on' else 'kun'})
-        for r in character_xml.iter('reading') if r.attrib['r_type'] in ['ja_on', 'ja_kun']
-    ]
+def make_readingstuple(character_xml):
+    for read in character_xml.iter("reading"):
+        if read.attrib['r_type'] in ['ja_on', 'ja_kun']:
+            yield (JapaneseReading(reading=read.text),
+                   {'type_reading': read.attrib['r_type'].replace('ja_', '')})
+        if read.attrib['r_type'] in ['korean_r', 'korean_h']:
+            yield (KoreanReading(reading=read.text), {})
+        if read.attrib['r_type'] == "pinyin":
+            yield (ChineseReading(reading=read.text), {})
 
 
-def _make_kanji_read_links(kanji, readings):
-    return [KanjiIsPronounced(begin_node=kanji, end_node=reading, **props)
-            for reading, props in readings]
+def make_readlinks(kanji, readings):
+    yield from (KanjiIsPronounced(begin_node=kanji, end_node=reading, **props)
+                for reading, props in readings)
 
 
-def _make_kanji_mean_links(kanji, meanings):
-    return [HasMeaning(begin_node=kanji, end_node=meaning)
-            for meaning in meanings]
+def make_meanlinks(kanji, meanings):
+    yield from (HasMeaning(begin_node=kanji, end_node=meaning)
+                for meaning in meanings)

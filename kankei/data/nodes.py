@@ -14,6 +14,8 @@ class Character(SimplifiedNode):
 
 
 class Kanji(Character):
+    __ignore_clsname__ = True
+    labels = ["Japanese"]
     fields = {
         'kanji_grade': String(),
         'kanji_jlpt': String(),
@@ -39,6 +41,16 @@ class Radical(Character):
 
 
 class Reading(SimplifiedNode):
+    identifier = 'reading'
+    indexes = ['reading']
+    fields = {
+        'reading': String()
+    }
+
+
+class JapaneseReading(Reading):
+    __ignore_clsname__ = True
+    labels = ["Japanese"]
     identifier = 'hiragana'
     indexes = ['hiragana']
     fields = {
@@ -46,9 +58,7 @@ class Reading(SimplifiedNode):
         'katakana': String(),
         'romaji': String()
     }
-    parameters = [
-        'reading'
-    ]
+    parameters = ['reading']
 
     def _post_init(self, reading):
         reading = reading.replace('-', '').replace('.', '')
@@ -65,6 +75,20 @@ class Reading(SimplifiedNode):
             self.props['romaji'] = reading
             self.props['hiragana'] = jp.roma_to_hira(reading)
             self.props['katakana'] = jp.roma_to_kata(reading)
+
+
+class KoreanReading(Reading):
+    __ignore_clsname__ = True
+    labels = ["Korean"]
+    parameters = ['reading']
+    def _post_init(self, reading):
+        ...
+        #parse hangul reading
+
+
+class ChineseReading(Reading):
+    __ignore_clsname__ = True
+    labels = ['Chinese']
 
 
 class Word(SimplifiedNode):
@@ -137,3 +161,4 @@ class Field(SimplifiedNode):
     fields = {
         'value': String()
     }
+

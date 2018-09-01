@@ -12,7 +12,9 @@ def xml_parse(method):
 
     def wrap(smart_dict, xml_path):
         data_root = Et.parse(xml_path).getroot()
-        method(data_root, smart_dict)
+        for provided_data in method(data_root):
+            print(provided_data)
+            smart_dict.add(provided_data)
         return smart_dict
 
     return wrap

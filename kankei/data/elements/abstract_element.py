@@ -20,7 +20,8 @@ class AbstractElement:
             raise AttributeError(f'invalid_property in Element: {",".join(invalid_prop)}')
 
         self.props = {name: type_.null for name, type_ in self.fields.items()}
-        post_init_args = {par: properties.pop(par) for par in self.parameters}
+        post_init_args = {par: properties.pop(par) if par not in properties else properties[par]
+                          for par in self.parameters}
 
         for name, value in properties.items():
             self.props[name] = value

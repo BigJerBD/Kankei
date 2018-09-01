@@ -5,47 +5,45 @@ from language.japanese import has_kanji
 
 
 @xml_parse
-def get_word(xml, fetch_helper):
+def get_word(xml):
     """create a node_collection and link_collection containing word data
     """
     for xml in xml.iter('entry'):
         baseread_xmls = get_baseread_xmls(xml)
-        words = make_words(xml)
-        fetch_helper.add_list(words)
+        words = list(make_words(xml))
+        yield from words
 
         for word in words:
             # link all reading to words
             if baseread_xmls:
                 nodes, links = make_readings_and_links(word, baseread_xmls)
-
-                fetch_helper.add_list(nodes)
-                fetch_helper.add_list(links)
+                yield from nodes
+                yield from links
             read_xmls = find_specific_reading_xml(word, xml)
             if read_xmls:
                 nodes, links = make_readings_and_links(word, read_xmls)
-                fetch_helper.add_list(nodes)
-                fetch_helper.add_list(links)
+                yield from nodes
+                yield from links
 
-        for sense in xml.iter('sense'):
+        for word_semantic in xml.iter('sense'):
             # link all definition to word
             definition = make_definition(xml)
-            fetch_helper.add(definition)
+            yield definition
 
             for word in words:
-                fetch_helper.add(make_word_def_link(word, definition))
+                yield make_word_def_link(word, definition)
 
-            for name, nodes, links in get_def_and_childs(definition, sense):
+            for name, nodes, links in get_def_and_childs(definition, word_semantic):
                 # link all category to definitions
-                fetch_helper.add_list(nodes)
-                fetch_helper.add_list(links)
+                yield from nodes
+                yield from links
 
 
 def find_specific_reading_xml(word, xml):
-    return [
-        w
-        for w in xml.findall('r_ele')
-        if any(word.props['writing'] == re_restr.text for re_restr in w.findall('re_restr'))
-    ]
+    return [w
+            for w in xml.findall('r_ele')
+            if any(word.props['writing'] == re_restr.text for re_restr in w.findall('re_restr'))
+            ]
 
 
 def get_baseread_xmls(xml):
@@ -68,17 +66,17 @@ def get_def_and_childs(definition, xml):
 def make_words(xml):
     entry_sequence = xml.find('ent_seq').text
     if xml.findall('k_ele'):
-        return [Word(entry_sequence=entry_sequence,
-                     writing=word.find('keb').text,
-                     has_kanji=has_kanji(word.find('keb').text),
-                     information=[inf.text for inf in word.findall('ke_inf')],
-                     priority=[pri.text for pri in word.findall('ke_pri')],
-                     ) for word in xml.findall('k_ele')]
+        yield from [Word(entry_sequence=entry_sequence,
+                         writing=word.find('keb').text,
+                         has_kanji=has_kanji(word.find('keb').text),
+                         information=[inf.text for inf in word.findall('ke_inf')],
+                         priority=[pri.text for pri in word.findall('ke_pri')],
+                         ) for word in xml.findall('k_ele')]
     else:
-        return [Word(entry_sequence=entry_sequence,
-                     writing=word.find('reb').text,
-                     has_kanji=False,
-                     ) for word in xml.findall('r_ele')]
+        yield from [Word(entry_sequence=entry_sequence,
+                         writing=word.find('reb').text,
+                         has_kanji=False,
+                         ) for word in xml.findall('r_ele')]
 
 
 def make_readings_and_links(word, xmls):

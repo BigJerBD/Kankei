@@ -15,6 +15,8 @@ class KankeiSmartDict:
      Link: {'Link1':{SubTypeLink: <data>,
             ...},
     ...]
+
+
     """
     node_groups = node_groups()
 
@@ -55,7 +57,6 @@ class KankeiSmartDict:
 
     def add_node(self, elem):
         main_type = elem.labels[-1]
-
         if main_type in (grp.type for grp in self.node_groups.keys()):
             self._data['Node'][main_type][elem.id].merge(elem)
         else:
