@@ -1,9 +1,9 @@
 from data.nodes import Radical
-from data_fetcher.fetch_decorator import xml_parse
+from data_parsers.fetch_decorator import xml_parse
 
 
 @xml_parse
-def get_radicals(xml):
+def parse_monash_radicals(xml):
     """
     create a node_collection containing radical data
     """

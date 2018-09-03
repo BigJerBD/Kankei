@@ -10,12 +10,10 @@ def xml_parse(method):
     :return:
     """
 
-    def wrap(smart_dict, xml_path):
+    def wrap(xml_path):
         data_root = Et.parse(xml_path).getroot()
         for provided_data in method(data_root):
-            print(provided_data)
-            smart_dict.add(provided_data)
-        return smart_dict
+            yield provided_data
 
     return wrap
 

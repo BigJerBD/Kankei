@@ -1,11 +1,11 @@
 from data.links import *
 from data.nodes import *
-from data_fetcher.fetch_decorator import xml_parse
+from data_parsers.fetch_decorator import xml_parse
 from language.japanese import has_kanji
 
 
 @xml_parse
-def get_word(xml):
+def parse_monash_words(xml):
     """create a node_collection and link_collection containing word data
     """
     for xml in xml.iter('entry'):

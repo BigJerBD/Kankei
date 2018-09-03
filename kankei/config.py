@@ -1,8 +1,10 @@
 import os
+from collections import OrderedDict
 from pathlib import Path
 
 import yaml
 
+import data_parsers
 from util.config_util import Config
 
 # configuration dictionary loading
@@ -23,3 +25,10 @@ conf.neo4j.graph = conf.neo4j.data / 'databases' / 'graph.db'
 conf.csv.node = Path(conf.csv.node)
 conf.csv.link = Path(conf.csv.link)
 
+
+fetch_mapping = OrderedDict([
+    ("monash_kanji", data_parsers.parse_monash_kanji),
+    ("kanjivg", data_parsers.parse_kanjivg),
+    ("monash_radicals", data_parsers.parse_monash_radicals),
+    ("monash_words", data_parsers.parse_monash_words)
+])

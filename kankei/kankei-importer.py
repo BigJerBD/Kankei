@@ -1,6 +1,7 @@
 import argparse
 
 import admin
+from data import node_groups
 
 parser = argparse.ArgumentParser(description='Kankei Import Management Application')
 
@@ -18,6 +19,7 @@ parser.add_argument("-a", nargs="+", action="append", dest="actions",
 # idea 1 : transform everything into json?
 # idea 2 : the end goal would be to have both a key-value store + a graph dabase store good night
 
+
 if __name__ == "__main__":
     args = parser.parse_args()
     action_dict = admin.get_admin_actions()
@@ -28,3 +30,5 @@ if __name__ == "__main__":
                          else (k, v)
                          for k, v in splitted_args)
         action_dict[name](**dict(splitted_args))
+
+

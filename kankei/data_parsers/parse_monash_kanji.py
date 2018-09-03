@@ -1,6 +1,6 @@
 from data.links import KanjiIsPronounced, HasMeaning
 from data.nodes import Kanji, Meaning, JapaneseReading, KoreanReading, ChineseReading
-from data_fetcher.fetch_decorator import xml_parse
+from data_parsers.fetch_decorator import xml_parse
 
 lang_tag_dict = {
     "fr": "French",
@@ -11,7 +11,7 @@ lang_tag_dict = {
 
 
 @xml_parse
-def get_kanji(xml):
+def parse_monash_kanji(xml):
     """
     create a node_collection and link_collection containing kanji data
     """

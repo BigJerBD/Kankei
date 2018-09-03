@@ -40,12 +40,7 @@ class Radical(Character):
     }
 
 
-class Reading(SimplifiedNode):
-    identifier = 'reading'
-    indexes = ['reading']
-    fields = {
-        'reading': String()
-    }
+class Reading(SimplifiedNode): ...
 
 
 class JapaneseReading(Reading):
@@ -80,15 +75,25 @@ class JapaneseReading(Reading):
 class KoreanReading(Reading):
     __ignore_clsname__ = True
     labels = ["Korean"]
-    parameters = ['reading']
-    def _post_init(self, reading):
+    identifier = 'reading'
+    indexes = ['reading']
+    fields = {
+        'reading': String()
+    }
+
+    def _post_init(self):
         ...
-        #parse hangul reading
+        # parse hangul reading
 
 
 class ChineseReading(Reading):
     __ignore_clsname__ = True
     labels = ['Chinese']
+    identifier = 'reading'
+    indexes = ['reading']
+    fields = {
+        'reading': String()
+    }
 
 
 class Word(SimplifiedNode):
@@ -161,4 +166,3 @@ class Field(SimplifiedNode):
     fields = {
         'value': String()
     }
-

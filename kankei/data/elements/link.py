@@ -21,6 +21,9 @@ class Link(AbstractElement):
         self.begin_node = begin_node
         self.end_node = end_node
 
+    def merge(self, other):
+        pass
+
     @property
     def csv(self):
         csv = self._base_csv

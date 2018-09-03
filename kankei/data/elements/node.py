@@ -25,6 +25,7 @@ class NodeMeta(type):
             setattr(cls, 'indexes', getattr(parent, 'indexes', []) + cls.__dict__.get('indexes', []))
             setattr(cls, 'fields', {**getattr(parent, 'fields'), **cls.__dict__.get('fields', {})})
 
+
 class Node(AbstractElement):
     concrete_identifier = None
     identifier = None
@@ -69,6 +70,10 @@ class Node(AbstractElement):
         csv[':ID(%s-ID)' % self.concrete_identifier] = csv[csv_header]
         csv[':LABEL'] = ';'.join(self.labels)
         return csv
+
+    @property
+    def json(self):
+        return self.props
 
 
 class SimplifiedNode(Node, metaclass=NodeMeta):

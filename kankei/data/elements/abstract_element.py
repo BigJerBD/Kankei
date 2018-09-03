@@ -32,10 +32,15 @@ class AbstractElement:
         props_str = [f'{key}={value}' for key, value in list(self.props.items())]
         return f'<{self.type}:{",".join(props_str)}>'
 
+
+    @abc.abstractmethod
+    def merge(self,other):
+        raise NotImplemented
+
     @property
     @abc.abstractmethod
     def csv(self):
-        ...
+        raise NotImplemented
 
     @property
     def _base_csv(self):
