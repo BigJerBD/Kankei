@@ -8,7 +8,7 @@ neo4j.password: '<TO_FILL>'
 csv.node: '<TO_FILL>'
 csv.link: '<TO_FILL>'
 
-data.component : '<TO_FILL>'
+data.subkanji : '<TO_FILL>'
 data.kanji : '<TO_FILL>'
 data.radical : '<TO_FILL>'
 data.word : '<TO_FILL>'

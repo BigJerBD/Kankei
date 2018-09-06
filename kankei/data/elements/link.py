@@ -25,12 +25,12 @@ class Link(AbstractElement):
         pass
 
     @property
-    def csv(self):
+    def neo4j_csv(self):
         csv = self._base_csv
         csv[':TYPE'] = self.type
 
-        csv[':START_ID(%s-ID)' % self.begin_node.concrete_identifier] = self.begin_node.id
-        csv[':END_ID(%s-ID)' % self.end_node.concrete_identifier] = self.end_node.id
+        csv[':START_ID(%s-ID)' % self.begin_node.identifying_label] = self.begin_node.id
+        csv[':END_ID(%s-ID)' % self.end_node.identifying_label] = self.end_node.id
         return csv
 
 

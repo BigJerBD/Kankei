@@ -74,7 +74,7 @@ class KanjiDictScraper:
 
             for kanji in kanjis_to_search:
                 for group, datas in self.fetch_kanji_data(kanji):
-                    files_dict[group].csv.writerow(datas)
+                    files_dict[group].neo4j_csv.writerow(datas)
                     files_dict[group].file.flush()
 
                 progress_bar.next()

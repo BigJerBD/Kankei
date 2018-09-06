@@ -5,7 +5,36 @@ from pathlib import Path
 import yaml
 
 import data_parsers
-from util.config_util import Config
+
+
+# config structure definition
+class SubConfig:
+    ...
+
+
+class Config:
+    """
+    empty class to make a configuration object simply
+    """
+
+    def __init__(self, source_dct):
+        for key, value in source_dct.items():
+            access_seq = key.split(".")
+            _append_dot_path(self, access_seq, value)
+
+    def __getattr__(self, item):
+        # specifies that a get_attribute (.) call is dynamic
+        return super().__getattribute__(item)
+
+
+def _append_dot_path(dct, accesses, value):
+    if accesses:
+        subdict = getattr(dct, accesses[0], SubConfig())
+        setattr(dct, accesses[0], _append_dot_path(subdict, accesses[1:], value))
+        return dct
+    else:
+        return value
+
 
 # configuration dictionary loading
 configuration_file_path = f"{os.environ['KANKEI_HOME']}/etc/config.yaml"
@@ -25,10 +54,13 @@ conf.neo4j.graph = conf.neo4j.data / 'databases' / 'graph.db'
 conf.csv.node = Path(conf.csv.node)
 conf.csv.link = Path(conf.csv.link)
 
-
 fetch_mapping = OrderedDict([
-    ("monash_kanji", data_parsers.parse_monash_kanji),
-    ("kanjivg", data_parsers.parse_kanjivg),
-    ("monash_radicals", data_parsers.parse_monash_radicals),
-    ("monash_words", data_parsers.parse_monash_words)
+    ("monash_kanji", (data_parsers.parse_monash_kanji,
+                      conf.data.kanji)),
+    ("kanjivg", (data_parsers.parse_kanjivg,
+                 conf.data.subkanji)),
+    ("monash_radicals", (data_parsers.parse_monash_radicals,
+                         conf.data.radical)),
+    ("monash_words", (data_parsers.parse_monash_words,
+                      conf.data.word))
 ])

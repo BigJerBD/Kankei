@@ -5,6 +5,9 @@ import os
 from collections import namedtuple
 from pathlib import Path
 
+# todo there must be a better way than making a util file
+# suggestion :: splitting  input output transform? i dont like it
+
 OpenCsv = namedtuple("OpenCsv", ["csv", "file"])
 
 
@@ -28,7 +31,7 @@ def open_csvs(base_path, names, mode, encoding):
         name: open(Path(base_path, name).with_suffix('.csv'), mode, encoding=encoding)
         for name in names
     }
-    yield {name: OpenCsv(csv=csv.writer(file),file=file) for name, file in file_dict.items()}
+    yield {name: OpenCsv(csv=csv.writer(file), file=file) for name, file in file_dict.items()}
 
 
 def stream_csv_data(csv_path, encoding, delimiter=","):

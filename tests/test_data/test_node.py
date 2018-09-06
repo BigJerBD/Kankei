@@ -30,7 +30,7 @@ class TestNode(unittest.TestCase):
         res_csv = {':LABEL': 'NodeData',
                    ':ID(NodeData-ID)': 'writing1',
                    'stroke_count:int[]': '7;8'}
-        self.assertEqual(res_csv, self.node.csv)
+        self.assertEqual(res_csv, self.node.neo4j_csv)
 
     def test_childnode_data(self):
         res_props = {'writing': 'writing1','writing2':'writing2', 'stroke_count': [8, 9]}
@@ -41,14 +41,14 @@ class TestNode(unittest.TestCase):
                    ':ID(ChildNodeData-ID)': 'writing2',
                    'writing:string': 'writing1',
                    'stroke_count:int[]': '8;9'}
-        self.assertEqual(res_csv, self.childnode.csv)
+        self.assertEqual(res_csv, self.childnode.neo4j_csv)
 
     def test_childnode2_csv(self):
         res_csv = {':LABEL': 'ChildNodeData2;NodeData',
                    ':ID(NodeData-ID)': 'writing1',
                    'writing3:string': 'writing3',
                    'stroke_count:int[]': '8;9'}
-        self.assertEqual(res_csv, self.childnode2.csv)
+        self.assertEqual(res_csv, self.childnode2.neo4j_csv)
 
 
 if __name__ == '__main__':

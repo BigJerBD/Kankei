@@ -13,25 +13,30 @@ class CombinerAggr(AbstractStruct):
     """
 
     def __init__(self, combinable_types):
-        self.combinable_types = combinable_types
-        self.uncombined_data = []
-        self.combined_data = defaultdict(Node)
-
-    def iter(self, elem):
-        yield from self.iter_combined()
-        yield from self.yield_uncombined()
-
-    def iter_combined(self):
-        yield from self.uncombined_data
-
-    def yield_uncombined(self):
-        yield from self.combined_data.values()
+        self.combinable_types = [c.type for c in combinable_types]
+        self.uncombined_data = defaultdict(list)
+        self.combined_data = defaultdict(lambda: defaultdict(Node))
 
     def add(self, elem):
-        main_type = elem.labels[-1]
-        if main_type in self.combinable_types:
-            self.combined_data[elem.id].merge(elem)
+
+        if elem.component_type == "Node":
+            main_type = elem.identifying_label
+            if main_type in self.combinable_types and elem.id in self.combined_data[main_type]:
+                self.combined_data[main_type][elem.id].merge(elem)
+            else:
+                self.combined_data[main_type][elem.id] = elem
         else:
-            self.uncombined_data.append(elem)
+            self.uncombined_data[elem.type].append(elem)
 
+    def grouping(self):
+        return list(self.combined_data.keys())
 
+    def iter(self):
+        yield from self.iter_combined()
+        yield from self.iter_uncombined()
+
+    def iter_uncombined(self):
+        return self.uncombined_data.items()
+
+    def iter_combined(self):
+        return ((k, v.values()) for k, v in self.combined_data.items())

@@ -20,7 +20,7 @@ class AbstractElement:
             raise AttributeError(f'invalid_property in Element: {",".join(invalid_prop)}')
 
         self.props = {name: type_.null for name, type_ in self.fields.items()}
-        post_init_args = {par: properties.pop(par) if par not in properties else properties[par]
+        post_init_args = {par: properties.pop(par) if par not in self.fields else properties[par]
                           for par in self.parameters}
 
         for name, value in properties.items():
@@ -39,7 +39,7 @@ class AbstractElement:
 
     @property
     @abc.abstractmethod
-    def csv(self):
+    def neo4j_csv(self):
         raise NotImplemented
 
     @property

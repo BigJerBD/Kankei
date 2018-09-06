@@ -15,7 +15,7 @@ class Character(SimplifiedNode):
 
 class Kanji(Character):
     __ignore_clsname__ = True
-    labels = ["Japanese"]
+    base_labels = ["Japanese"]
     fields = {
         'kanji_grade': String(),
         'kanji_jlpt': String(),
@@ -45,7 +45,7 @@ class Reading(SimplifiedNode): ...
 
 class JapaneseReading(Reading):
     __ignore_clsname__ = True
-    labels = ["Japanese"]
+    base_labels = ["Japanese"]
     identifier = 'hiragana'
     indexes = ['hiragana']
     fields = {
@@ -74,21 +74,18 @@ class JapaneseReading(Reading):
 
 class KoreanReading(Reading):
     __ignore_clsname__ = True
-    labels = ["Korean"]
-    identifier = 'reading'
-    indexes = ['reading']
+    base_labels = ["Korean"]
+    identifier = 'latin_read'
+    indexes = ['latin_read']
     fields = {
-        'reading': String()
+        'hangul': String(),
+        'latin_read': String()
     }
-
-    def _post_init(self):
-        ...
-        # parse hangul reading
 
 
 class ChineseReading(Reading):
     __ignore_clsname__ = True
-    labels = ['Chinese']
+    base_labels = ['Chinese']
     identifier = 'reading'
     indexes = ['reading']
     fields = {
@@ -166,3 +163,4 @@ class Field(SimplifiedNode):
     fields = {
         'value': String()
     }
+

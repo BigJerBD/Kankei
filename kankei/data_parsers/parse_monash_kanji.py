@@ -1,5 +1,5 @@
 from data.links import KanjiIsPronounced, HasMeaning
-from data.nodes import Kanji, Meaning, JapaneseReading, KoreanReading, ChineseReading
+from data.nodes import Kanji, Meaning, JapaneseReading, ChineseReading, KoreanReading
 from data_parsers.fetch_decorator import xml_parse
 
 lang_tag_dict = {
@@ -44,12 +44,19 @@ def make_meanings(character_xml):
 
 
 def make_readingstuple(character_xml):
-    for read in character_xml.iter("reading"):
+    all_reads = list(character_xml.iter("reading"))
+    korean_reads = [r for r in all_reads if r.attrib['r_type'] in ["korean_r", "korean_h"]]
+    len(korean_reads) % 2 == 1 and korean_reads.append(None)
+    split_pos = int(len(korean_reads)/2)
+
+    for k_roman, k_hangul in zip(korean_reads[:split_pos], korean_reads[split_pos:]):
+        # fix allignment problem
+        yield (KoreanReading(latin_read=k_roman.text, hangul=getattr(k_hangul, "text", "")), {})
+
+    for read in all_reads:
         if read.attrib['r_type'] in ['ja_on', 'ja_kun']:
             yield (JapaneseReading(reading=read.text),
                    {'type_reading': read.attrib['r_type'].replace('ja_', '')})
-        if read.attrib['r_type'] in ['korean_r', 'korean_h']:
-            yield (KoreanReading(reading=read.text), {})
         if read.attrib['r_type'] == "pinyin":
             yield (ChineseReading(reading=read.text), {})
 

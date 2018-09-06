@@ -8,5 +8,10 @@ class AbstractStruct:
         raise NotImplemented
 
     @abc.abstractmethod
-    def iter(self, elem):
+    def iter(self):
+        raise NotImplemented
+
+    @property
+    @abc.abstractmethod
+    def grouping(self):
         raise NotImplemented

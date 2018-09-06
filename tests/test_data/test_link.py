@@ -49,7 +49,7 @@ class TestLink(unittest.TestCase):
         self.assertEqual(self.link.props['element2'], 'new_value2')
 
     def test_csv(self):
-        self.assertEqual(self.link.csv,self.result_csv)
+        self.assertEqual(self.link.neo4j_csv, self.result_csv)
 
 
 if __name__ == '__main__':
