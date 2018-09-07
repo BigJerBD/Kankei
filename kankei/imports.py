@@ -24,3 +24,18 @@ make_monashkanji = ImportProc(
     }
 )
 
+test_neo4jcsv = ImportProc(
+    aggregator=CombinerAggr,
+    aggr_args={
+        "combinable_types": []
+    },
+    fetches=["kkneo4jcsv"],
+    writer=csv_writer,
+    writer_args={
+        "path": Path("test.csv"),
+        "reset": True
+    }
+)
+
+
+

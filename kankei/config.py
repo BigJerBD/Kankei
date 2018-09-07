@@ -62,5 +62,7 @@ fetch_mapping = OrderedDict([
     ("monash_radicals", (data_parsers.parse_monash_radicals,
                          conf.data.radical)),
     ("monash_words", (data_parsers.parse_monash_words,
-                      conf.data.word))
+                      conf.data.word)),
+    ("parse_kkneo4jcsv", (data_parsers.parse_kkneo4jcsv,
+                          conf.data.output))
 ])

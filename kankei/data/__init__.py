@@ -18,7 +18,7 @@ def _get_classes(cls, from_module):
             ]
 
 
-def _get_node_group(classes):
+def _get_node_groups(classes):
     groups = defaultdict(list)
     for cls in classes:
         direct_parent, *rest = cls.__bases__
@@ -27,17 +27,10 @@ def _get_node_group(classes):
     return groups
 
 
-def all_links():
-    return _get_classes(Link, 'data.links')
+all_links = _get_classes(Link, 'data.links')
 
+all_nodes = _get_classes(SimplifiedNode, 'data.nodes')
 
-def all_nodes():
-    return _get_classes(SimplifiedNode, 'data.nodes')
+all_types = _get_classes(AbstractType, 'data.elements.proprety_types')
 
-
-def all_types():
-    return _get_classes(AbstractType, 'data.elements.proprety_types')
-
-
-def node_groups():
-    return _get_node_group(all_nodes())
+all_node_groups = _get_node_groups(all_nodes)

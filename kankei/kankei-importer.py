@@ -14,8 +14,12 @@ parser = argparse.ArgumentParser(description='Kankei Import Management Applicati
 # def execute_import(import_tu):
 #    ...
 
-# todo  the extra meaning tags doesnt show
-# todo korean tags doesnt works
+
+# + todo kankei csv parser folder parser
+# + todo better interface for this directories
+# - todo sql lite parser
+# -todo meaning extractor for kanjipedia and kanjiten
+# - todo kanjiten and kanjipedia parser
 
 imports = {
     name: imp
