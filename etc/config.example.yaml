@@ -1,20 +1,45 @@
-neo4j.bin: '<TO_FILL>'
-neo4j.data: '<TO_FILL>'
-neo4j.report: '<TO_FILL>'
-neo4j.url: '<TO_FILL>'
-neo4j.user: '<TO_FILL>'
-neo4j.password: '<TO_FILL>'
+data_sources:
+- &monash_kanji "/home/bigjerbd/Data/kankei_src/kanji.xml"
+- &monash_radicals "/home/bigjerbd/Data/kankei_src/radicals.xml"
+- &monash_words  "/home/bigjerbd/Data/kankei_src/kanji-words.xml"
+- &kanjivg "/home/bigjerbd/Data/kankei_src/kanji-strokes.xml"
 
-csv.node: '<TO_FILL>'
-csv.link: '<TO_FILL>'
+data_destinations:
+- &csv_node "/home/bigjerbd/Data/kankei_dst/node"
+- &csv_link "/home/bigjerbd/Data/kankei_dst/link"
+- &monash_output "/home/bigjerbd/Data/output/"
 
-data.subkanji : '<TO_FILL>'
-data.kanji : '<TO_FILL>'
-data.radical : '<TO_FILL>'
-data.word : '<TO_FILL>'
 
-data.apitore.key: '<TO_FILL>'
-data.apitore.hyponym: '<TO_FILL>'
-data.apitore.hypernym: '<TO_FILL>'
+actions:
 
+  import_monash_kanji:
+    fetches:
+    - obj: data_collectors.parse_monash_kanji
+      args:
+        path: *monash_kanji
+    - obj: data_collectors.parse_kanjivg
+      args:
+        path: *kanjivg
+    - obj: data_collectors.parse_monash_radicals
+      args:
+        path: *monash_radicals
+    trans:
+      obj: data_aggregators.CombinerAggregator
+      args:
+        combinable_types: ["Character"]
+    writers:
+    - obj: data_writers.csv_writer
+      args:
+        path: *monash_output
+        reset: on
+
+  csvs_to_neo4j:
+    writers:
+    - obj: data_writers.neo4j_writer
+      link_path: *csv_link
+      node_path: *csv_node
+      graph_path: '/usr/share/neo4j/data/databases'
+      report_path: "/tmp"
+      admin_path: '/usr/share/neo4j/bin/neo4j-admin'
+      reset: on
 
