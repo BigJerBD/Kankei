@@ -65,9 +65,10 @@ a configuration file contains actions which uses specfic components :
 - [data_collectors](kankei-data/data_collectors)
 - [data_writers](kankei-data/data_writers)
 
-with a configuration file specific the importer work like this : 
+the importer works like this when used with a configuration file and an action : 
 
-- for each data collectors :
+- get the specified action
+- for each data collectors of an action:
 	- collect the data
   - aggregate them togheter proprelly
 - for each aggregated data:
